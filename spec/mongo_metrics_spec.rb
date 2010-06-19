@@ -11,6 +11,18 @@ describe MongoMetrics do
     request_document["status"].should == 200
   end
 
+  it "records the Host" do
+    header "Host", "example.com:80"
+    get "/"
+    request_document["host"].should == "example.com:80"
+  end
+
+  it "records the remote IP address" do
+    header "X-Forwarded-For", "10.0.0.200"
+    get "/"
+    request_document["remote_ip"].should == "10.0.0.200"
+  end
+
   it "records GET params" do
     get "/", "id" => "42"
     request_document["params"]["id"].should == "42"
@@ -44,5 +56,17 @@ describe MongoMetrics do
     get "/", {}, { "mongo_metrics.cookies" => ["foo", "baz"] }
     request_document["cookies"].should == { "foo" => "bar", "baz" => "bop" }
   end
+
+  # TODO:
+  it "records the user agent header by default"
+  it "records specified HTTP headers"
+  it "records the URL"
+  it "records the URL path"
+  it "records the HTTP method"
+  it "records the URL scheme"
+  it "records specified session values"
+  it "filters params stores to Mongo"
+  it "does not store uploaded files"
+  it "does not store arbitrary post bodies"
 end
 
