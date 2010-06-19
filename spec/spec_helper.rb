@@ -8,11 +8,18 @@ require "mongo_metrics"
 require "rspec"
 require "rack/test"
 
+ENV["RAILS_ENV"] = "test"
+require "fixture/config/environment"
+
 RSpec.configure do |c|
   c.include Rack::Test::Methods
 
   c.before do
-    mongo.drop_database(MongoMetrics::DB_NAME)
+    db.collections.each(&:drop)
+  end
+
+  def request_document
+    requests_collection.find_one
   end
 
   def requests_collection
