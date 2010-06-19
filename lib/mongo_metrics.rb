@@ -16,6 +16,8 @@ class MongoMetrics
   def call(env)
     document = RequestDocument.new(env)
     status, headers, body = @app.call(env)
+    document.record_response(status)
+
     [status, headers, body_wrapper(body, document)]
   end
 

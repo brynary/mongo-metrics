@@ -6,6 +6,11 @@ describe MongoMetrics do
     requests_collection.count.should == 1
   end
 
+  it "records the response code" do
+    get "/"
+    request_document["status"].should == 200
+  end
+
   it "records GET params" do
     get "/", "id" => "42"
     request_document["params"]["id"].should == "42"
