@@ -6,9 +6,29 @@ describe MongoMetrics do
     requests_collection.count.should == 1
   end
 
+  it "records the URL" do
+    get "/", "foo" => "bar"
+    request_document["url"].should == "http://example.org/?foo=bar"
+  end
+
+  it "records the URL path" do
+    get "/", "foo" => "bar"
+    request_document["path"].should == "/"
+  end
+
   it "records the response code" do
     get "/"
     request_document["status"].should == 200
+  end
+
+  it "records the HTTP method" do
+    put "/"
+    request_document["request_method"].should == "PUT"
+  end
+
+  it "records the URL scheme" do
+    get "/", {}, { "rack.url_scheme" => "https" }
+    request_document["url_scheme"].should == "https"
   end
 
   it "records the Host" do
@@ -59,11 +79,8 @@ describe MongoMetrics do
 
   # TODO:
   it "records the user agent header by default"
-  it "records specified HTTP headers"
-  it "records the URL"
-  it "records the URL path"
-  it "records the HTTP method"
-  it "records the URL scheme"
+  it "records specified request HTTP headers"
+  it "records the response content type"
   it "records specified session values"
   it "filters params stores to Mongo"
   it "does not store uploaded files"

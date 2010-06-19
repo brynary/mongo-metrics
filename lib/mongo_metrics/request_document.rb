@@ -19,9 +19,13 @@ class MongoMetrics
   private
 
     def record_env
-      document["params"]    = request.params
-      document["host"]      = request.host_with_port
-      document["remote_ip"] = request.ip
+      document["url"]             = request.url
+      document["params"]          = request.params
+      document["host"]            = request.host_with_port
+      document["remote_ip"]       = request.ip
+      document["request_method"]  = request.request_method
+      document["url_scheme"]      = request.scheme
+      document["path"]            = request.path
       record_cookies
     end
 
