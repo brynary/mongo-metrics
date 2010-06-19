@@ -1,8 +1,9 @@
 class MongoMetrics
   class RequestDocument
-    attr_reader :env
+    attr_reader :env, :options
 
-    def initialize(env)
+    def initialize(customized_defaults, env)
+      @options = Options.new(customized_defaults, env)
       @env = env
       record_env
     end
@@ -23,10 +24,10 @@ class MongoMetrics
     end
 
     def record_cookies
-      return unless env["mongo_metrics.cookies"]
+      return unless options[:cookies]
       document["cookies"] = Hash.new
 
-      env["mongo_metrics.cookies"].each do |cookie_name|
+      options[:cookies].each do |cookie_name|
         document["cookies"][cookie_name] = request.cookies[cookie_name]
       end
     end

@@ -21,15 +21,15 @@ describe MongoMetrics do
     request_document["params"]["id"].should == "42"
   end
 
-  it "doesn't record cookies by default" do
+  it "doesn't record cookies when disabled" do
     set_cookie "__utma=123.4321.123.11"
-    get "/"
+    get "/", {}, { "mongo_metrics.cookies" => nil }
     request_document["cookies"].should be_nil
   end
 
   it "records cookies" do
     set_cookie "__utma=123.4321.123.11"
-    get "/", {}, { "mongo_metrics.cookies" => ["__utma"] }
+    get "/"
     request_document["cookies"]["__utma"].should == "123.4321.123.11"
   end
 
