@@ -1,5 +1,5 @@
 class MongoMetrics
-  class RequestDocument# < ::Hash
+  class RequestDocument
     attr_reader :env
 
     def initialize(env)
