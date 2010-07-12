@@ -18,7 +18,7 @@ RSpec.configure do |c|
     db.collections.each(&:drop)
   end
 
-  def request_document
+  def document
     requests_collection.find_one
   end
 
