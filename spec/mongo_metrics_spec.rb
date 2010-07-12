@@ -99,7 +99,12 @@ describe MongoMetrics do
     document["action_name"].should == "hello"
   end
 
-  it "records specified request HTTP headers"
+  it "records specified request HTTP headers" do
+    header "Foo", "Bar"
+    get "/", {}, { "mongo_metrics.request_headers" => [ "Foo" ] }
+    document["request"]["headers"]["Foo"].should == "Bar"
+  end
+
   it "records specified session values"
   it "filters params stores to Mongo"
   it "does not store uploaded files"

@@ -35,6 +35,13 @@ class MongoMetrics
 
       document["request"] ||= Hash.new
       document["request"]["content_type"] = request.content_type
+      document["request"]["headers"] ||= Hash.new
+
+      options[:request_headers].each do |header_name|
+        env_key = header_name.upcase.gsub("-", "_")
+        env_key = "HTTP_" + env_key unless "CONTENT_TYPE" == env_key
+        document["request"]["headers"][header_name] = @env[env_key]
+      end
 
       record_cookies
     end
