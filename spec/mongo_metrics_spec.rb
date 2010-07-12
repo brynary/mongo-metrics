@@ -56,25 +56,25 @@ describe MongoMetrics do
   it "doesn't record cookies when disabled" do
     set_cookie "__utma=123.4321.123.11"
     get "/", {}, { "mongo_metrics.cookies" => nil }
-    request_document["cookies"].should be_nil
+    request_document["request"]["cookies"].should be_nil
   end
 
   it "records cookies" do
     set_cookie "__utma=123.4321.123.11"
     get "/"
-    request_document["cookies"]["__utma"].should == "123.4321.123.11"
+    request_document["request"]["cookies"]["__utma"].should == "123.4321.123.11"
   end
 
   it "records cookies that are missing" do
     get "/", {}, { "mongo_metrics.cookies" => ["__utma"] }
-    request_document["cookies"]["__utma"].should == nil
+    request_document["request"]["cookies"]["__utma"].should == nil
   end
 
   it "records multiple cookies" do
     set_cookie "foo=bar"
     set_cookie "baz=bop"
     get "/", {}, { "mongo_metrics.cookies" => ["foo", "baz"] }
-    request_document["cookies"].should == { "foo" => "bar", "baz" => "bop" }
+    request_document["request"]["cookies"].should == { "foo" => "bar", "baz" => "bop" }
   end
 
   it "records the user agent header" do
@@ -83,8 +83,13 @@ describe MongoMetrics do
     request_document["user_agent"].should == "Chrome"
   end
 
+  it "records the response content type" do
+    header "Content-Type", "application/json"
+    get "/"
+    request_document["request"]["content_type"].should == "application/json"
+  end
+
   it "records specified request HTTP headers"
-  it "records the response content type"
   it "records specified session values"
   it "filters params stores to Mongo"
   it "does not store uploaded files"

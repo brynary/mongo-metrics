@@ -27,15 +27,20 @@ class MongoMetrics
       document["url_scheme"]      = request.scheme
       document["path"]            = request.path
       document["user_agent"]      = request.user_agent
+
+      document["request"] ||= Hash.new
+      document["request"]["content_type"] = request.content_type
+
       record_cookies
     end
 
     def record_cookies
       return unless options[:cookies]
-      document["cookies"] = Hash.new
+      document["request"] ||= Hash.new
+      document["request"]["cookies"] ||= Hash.new
 
       options[:cookies].each do |cookie_name|
-        document["cookies"][cookie_name] = request.cookies[cookie_name]
+        document["request"]["cookies"][cookie_name] = request.cookies[cookie_name]
       end
     end
 
