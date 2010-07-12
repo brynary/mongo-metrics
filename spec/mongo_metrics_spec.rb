@@ -89,6 +89,16 @@ describe MongoMetrics do
     document["request"]["content_type"].should == "application/json"
   end
 
+  it "records the controller name" do
+    get "/"
+    document["controller_name"].should == "application"
+  end
+
+  it "records the action name" do
+    get "/"
+    document["action_name"].should == "hello"
+  end
+
   it "records specified request HTTP headers"
   it "records specified session values"
   it "filters params stores to Mongo"

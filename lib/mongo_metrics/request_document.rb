@@ -28,6 +28,11 @@ class MongoMetrics
       document["path"]            = request.path
       document["user_agent"]      = request.user_agent
 
+      if @env["action_dispatch.request.path_parameters"]
+        document["controller_name"] = @env["action_dispatch.request.path_parameters"][:controller]
+        document["action_name"] = @env["action_dispatch.request.path_parameters"][:action]
+      end
+
       document["request"] ||= Hash.new
       document["request"]["content_type"] = request.content_type
 
