@@ -26,6 +26,7 @@ class MongoMetrics
       document["request_method"]  = request.request_method
       document["url_scheme"]      = request.scheme
       document["path"]            = request.path
+      document["user_agent"]      = request.user_agent
       record_cookies
     end
 

@@ -77,8 +77,12 @@ describe MongoMetrics do
     request_document["cookies"].should == { "foo" => "bar", "baz" => "bop" }
   end
 
-  # TODO:
-  it "records the user agent header by default"
+  it "records the user agent header" do
+    header "User-Agent", "Chrome"
+    get "/"
+    request_document["user_agent"].should == "Chrome"
+  end
+
   it "records specified request HTTP headers"
   it "records the response content type"
   it "records specified session values"
