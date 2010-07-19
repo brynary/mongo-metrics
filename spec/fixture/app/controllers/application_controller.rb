@@ -1,3 +1,5 @@
+require "mongo_metrics"
+
 class ApplicationController < ActionController::Base
   use MongoMetrics
 
