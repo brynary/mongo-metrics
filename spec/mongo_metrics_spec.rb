@@ -106,7 +106,12 @@ describe MongoMetrics do
   end
 
   it "records specified session values"
-  it "filters params stores to Mongo"
+
+  it "filters params stores to Mongo" do
+    get "/", "password" => "secret"
+    document["params"]["password"].should == "[FILTERED]"
+  end
+
   it "does not store uploaded files"
   it "does not store arbitrary post bodies"
 end

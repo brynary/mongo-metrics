@@ -1,6 +1,10 @@
+require "action_dispatch"
+
 class MongoMetrics
   class RequestDocument
     attr_reader :env, :options
+
+    include ::ActionDispatch::Http::FilterParameters
 
     def initialize(customized_defaults, env)
       @options = Options.new(customized_defaults, env)
@@ -20,7 +24,7 @@ class MongoMetrics
 
     def record_env
       document["url"]             = request.url
-      document["params"]          = request.params
+      document["params"]          = filtered_parameters
       document["host"]            = request.host_with_port
       document["remote_ip"]       = request.ip
       document["request_method"]  = request.request_method
@@ -58,6 +62,10 @@ class MongoMetrics
 
     def document
       @hash ||= Hash.new
+    end
+
+    def parameters
+      request.params
     end
 
     def request
