@@ -47,6 +47,12 @@ class MongoMetrics
         document["request"]["headers"][header_name] = @env[env_key]
       end
 
+      document["request"]["session"] ||= Hash.new
+
+      options[:session_keys].each do |session_key|
+        document["request"]["session"][session_key] = @env["rack.session"][session_key]
+      end
+
       record_cookies
     end
 

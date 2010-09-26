@@ -19,7 +19,7 @@ RSpec.configure do |c|
   end
 
   def document
-    requests_collection.find_one
+    requests_collection.find.to_a.last
   end
 
   def requests_collection

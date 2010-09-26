@@ -32,9 +32,8 @@ describe MongoMetrics do
   end
 
   it "records the Host" do
-    header "Host", "example.com:80"
     get "/"
-    document["host"].should == "example.com:80"
+    document["host"].should == "example.org"
   end
 
   it "records the remote IP address" do
@@ -105,7 +104,10 @@ describe MongoMetrics do
     document["request"]["headers"]["Foo"].should == "Bar"
   end
 
-  it "records specified session values"
+  it "records specified session values" do
+    2.times { get "/", {}, { "mongo_metrics.session_keys" => [ "counter" ] } }
+    document["request"]["session"]["counter"].should == 2
+  end
 
   it "filters params stores to Mongo" do
     get "/", "password" => "secret"

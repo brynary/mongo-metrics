@@ -4,7 +4,8 @@ class MongoMetrics
     def self.valid_options
       [
         "mongo_metrics.cookies",
-        "mongo_metrics.request_headers"
+        "mongo_metrics.request_headers",
+        "mongo_metrics.session_keys"
       ]
     end
 
@@ -53,8 +54,9 @@ class MongoMetrics
 
     def default_options
       {
-        "mongo_metrics.cookies" => ["__utma"],
-        "mongo_metrics.request_headers" => []
+        "mongo_metrics.cookies"         => ["__utma"],
+        "mongo_metrics.request_headers" => [],
+        "mongo_metrics.session_keys"    => []
       }
     end
 
