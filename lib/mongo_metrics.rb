@@ -1,5 +1,4 @@
 require "mongo_metrics/options"
-require "mongo_metrics/body_wrapper"
 require "mongo_metrics/request_document"
 require "mongo"
 
@@ -20,15 +19,9 @@ class MongoMetrics
     status, headers, body = @app.call(env)
     document.record_response(status)
 
-    [status, headers, body_wrapper(body, document)]
-  end
+    @collection.insert(document.to_hash)
 
-private
-
-  def body_wrapper(original_body, document)
-    BodyWrapper.new(original_body) do
-      @collection.insert(document.to_hash)
-    end
+    [status, headers, body]
   end
 
 end
