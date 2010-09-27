@@ -15,11 +15,7 @@ RSpec.configure do |c|
   c.include Rack::Test::Methods
 
   c.before do
-    clear_documents
-  end
-
-  def clear_documents
-    db.collections.each(&:drop)
+    requests_collection.remove
   end
 
   def document(timeout = 1)
@@ -34,15 +30,15 @@ RSpec.configure do |c|
   end
 
   def requests_collection
-    @collection ||= db["requests"]
+    @@collection ||= db["requests"]
   end
 
   def db
-    @db ||= mongo.db(MongoMetrics::DB_NAME)
+    @@db ||= mongo.db(MongoMetrics::DB_NAME)
   end
 
   def mongo
-    @mongo ||= Mongo::Connection.new
+    @@mongo ||= Mongo::Connection.new
   end
 
   def app

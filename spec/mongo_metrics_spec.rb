@@ -107,7 +107,7 @@ describe MongoMetrics do
   it "records specified session values" do
     get "/", {}, { "mongo_metrics.session_keys" => [ "counter" ] }
     document["request"]["session"]["counter"].should be_nil
-    clear_documents
+    requests_collection.remove
     get "/", {}, { "mongo_metrics.session_keys" => [ "counter" ] }
     document["request"]["session"]["counter"].should == 2
   end
