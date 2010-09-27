@@ -1,7 +1,4 @@
-require "mongo_metrics"
-
 class ApplicationController < ActionController::Base
-  use MongoMetrics
 
   def hello
     session[:counter] ||= 1
