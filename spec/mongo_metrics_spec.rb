@@ -3,7 +3,7 @@ require "spec_helper"
 describe MongoMetrics do
   it "records one document per request" do
     get "/"
-    requests_collection.count.should == 1
+    document.should_not be_nil
   end
 
   it "records the URL" do
@@ -105,7 +105,10 @@ describe MongoMetrics do
   end
 
   it "records specified session values" do
-    2.times { get "/", {}, { "mongo_metrics.session_keys" => [ "counter" ] } }
+    get "/", {}, { "mongo_metrics.session_keys" => [ "counter" ] }
+    document["request"]["session"]["counter"].should be_nil
+    clear_documents
+    get "/", {}, { "mongo_metrics.session_keys" => [ "counter" ] }
     document["request"]["session"]["counter"].should == 2
   end
 

@@ -15,11 +15,22 @@ RSpec.configure do |c|
   c.include Rack::Test::Methods
 
   c.before do
+    clear_documents
+  end
+
+  def clear_documents
     db.collections.each(&:drop)
   end
 
-  def document
-    requests_collection.find.to_a.last
+  def document(timeout = 1)
+    start = Time.now
+    begin
+      documents = requests_collection.find.to_a
+      documents.size.should == 1
+      documents.last
+    rescue
+      start + timeout > Time.now ? retry : raise
+    end
   end
 
   def requests_collection

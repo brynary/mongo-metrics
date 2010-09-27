@@ -12,6 +12,27 @@ class MongoMetrics
     @app                  = app
     @customized_defaults  = customized_defaults
     @collection           = @@db[COLLECTION_NAME]
+    @queue                = []
+    @lock                 = Mutex.new
+
+    Thread.new do
+      loop do
+        documents = nil
+
+        @lock.synchronize do
+          if @queue.any?
+            documents = @queue.dup
+            @queue = []
+          end
+        end
+
+        if documents
+          @collection.insert(documents.map(&:to_hash))
+        end
+
+        sleep 0.001
+      end
+    end
   end
 
   def call(env)
@@ -19,7 +40,9 @@ class MongoMetrics
     status, headers, body = @app.call(env)
     document.record_response(status)
 
-    @collection.insert(document.to_hash)
+    @lock.synchronize do
+      @queue << document
+    end
 
     [status, headers, body]
   end
